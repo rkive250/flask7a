@@ -7,11 +7,11 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return "<p>Hola, Mundo!</p>"
+    return render_template("app.html")
 
 @app.route("/alumnos")
 def alumnos():
-    return render_template("app.html")
+    return render_template("alumnos.html")
 
 @app.route("/alumnos/guardar", methods=["POST"])
 def alumnosGuardar():
