@@ -13,7 +13,7 @@ def index():
 def alumnos():
     return render_template("alumnos.html")
 
-@app.route("/alumnos/guardar", methods=["POST"])
+@app.route("/alumnos/guardar", methods=["GET"])
 def alumnosGuardar():
     matricula = request.form["txtMatriculaFA"]
     nombreapellido = request.form["txtNombreApellidoFA"]
@@ -28,4 +28,4 @@ def evento ():
         ssl=True
     )
 
-    pusher_client.trigger('conexion', 'evento', {'message': 'hello world'})
+    pusher_client.trigger("conexion", "evento", request.args)
