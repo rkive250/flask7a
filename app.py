@@ -2,7 +2,7 @@ from flask import Flask
 
 from flask import render_template
 from flask import request
-
+import pusher
 app = Flask(__name__)
 
 @app.route("/")
@@ -20,7 +20,7 @@ def alumnosGuardar():
     return f"Matrícula: {matricula} Nombre y Apellido: {nombreapellido}"
 @app.route("/evento")
 def evento ()
-import pusher
+
 
 pusher_client = pusher.Pusher(
   app_id='1864232',
