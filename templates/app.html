@@ -33,9 +33,10 @@
       cluster: 'us2'
     });
 
-    var channel = pusher.subscribe('my-channel');
-    channel.bind('my-event', function(data) {
-      alert(JSON.stringify(data));
+    var channel = pusher.subscribe('conexion');
+      //evento : Accion de la app
+    channel.bind('evento', function(data) {
+      alert("ya ocurrio el evento en la aplicacion");
     });
   </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
