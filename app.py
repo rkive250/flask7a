@@ -19,15 +19,13 @@ def alumnosGuardar():
     nombreapellido = request.form["txtNombreApellidoFA"]
     return f"Matrícula: {matricula} Nombre y Apellido: {nombreapellido}"
 @app.route("/evento")
-def evento ()
+def evento ():
+    pusher_client = pusher.Pusher(
+        app_id='1864232',
+        key='ec020425c2206acb32eb',
+        secret='a5091fe74dbda031cda4',
+        cluster='us2',
+        ssl=True
+    )
 
-
-pusher_client = pusher.Pusher(
-  app_id='1864232',
-  key='ec020425c2206acb32eb',
-  secret='a5091fe74dbda031cda4',
-  cluster='us2',
-  ssl=True
-)
-
-pusher_client.trigger('conexion', 'evento', {'message': 'hello world'})
+    pusher_client.trigger('conexion', 'evento', {'message': 'hello world'})
