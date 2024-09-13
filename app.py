@@ -11,7 +11,7 @@ def index():
 
 @app.route("/alumnos")
 def alumnos():
-    return render_template("alumnos.html")
+    return render_template("app.html")
 
 @app.route("/alumnos/guardar", methods=["POST"])
 def alumnosGuardar():
