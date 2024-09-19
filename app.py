@@ -31,9 +31,10 @@ def alumnos():
 @app.route("/alumnos/guardar", methods=["POST"])
 def alumnosGuardar():
     con.close()
-    matricula      = request.form["txtMatriculaFA"]
-    nombreapellido = request.form["txtNombreApellidoFA"]
-    return f"Matrícula: {matricula} Nombre y Apellido: {nombreapellido}"
+    telefono= request.form["tel"]
+    nombre_curso= request.form["ncurso"]
+
+    return f"telefono {telefono} telefono: {telefono}"
 
 @app.route("/buscar")
 def buscar():
@@ -58,6 +59,8 @@ def evento():
   
     sql = "INSERT INTO tst0_cursos (Telefono) VALUES (%s)"
     val = (args["tel"])
+    val = (args["ncurso"])
+
     cursor.execute(sql, val)
     
     con.commit()
