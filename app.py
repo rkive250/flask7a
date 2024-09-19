@@ -41,7 +41,7 @@ def buscar():
         con.reconnect()
 
     cursor = con.cursor()
-    cursor.execute("SELECT * FROM customers")
+    cursor.execute("SELECT * FROM tst0_cursos")
     
     registros = cursor.fetchall()
 
@@ -56,8 +56,8 @@ def evento():
 
     args = request.args
   
-    sql = "INSERT INTO sensor_log (Temperatura, Humedad, Fecha_Hora) VALUES (%s, %s, %s)"
-    val = (args["temperatura"], args["humedad"], datetime.datetime.now())
+    sql = "INSERT INTO tst0_cursos (Telefono) VALUES (%s)"
+    val = (args["tel"])
     cursor.execute(sql, val)
     
     con.commit()
