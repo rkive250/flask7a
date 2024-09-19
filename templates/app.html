@@ -17,9 +17,8 @@
         <table class="table table-sm">
             <thead>
                 <tr>
-                    <th>Temperatura</th>
-                    <th>Humedad</th>
-                    <th>Fecha y Hora</th>
+                    <th>Telefono</th>
+                    
                 </tr>
             </thead>
             <tbody id="tbodyLog"></tbody>
@@ -38,8 +37,6 @@
 
                     $("#tbodyLog").append(`<tr>
                         <td>${registro[1]}</td>
-                        <td>${registro[2]}</td>
-                        <td>${registro[3]}</td>
                     </tr>`)
                 }
             })
@@ -61,9 +58,8 @@
             // alert("Ya ocurrió el evento en la aplicación")
             /**
             $("#tbodyLog").append(`<tr>
-                <td>${mensaje["temperatura"]}</td>
-                <td>${mensaje["humedad"]}</td>
-                <td>${mensaje["fechahora"]}</td>
+                <td>${mensaje["tel"]}</td>
+                <
             </tr>`)
             */
             buscar()
