@@ -57,9 +57,8 @@ def evento():
 
     args = request.args
   
-    sql = "INSERT INTO tst0_cursos (Telefono) VALUES (%s)"
-    val = (args["tel"])
-    val = (args["ncurso"])
+    sql = "INSERT INTO tst0_cursos (Telefono , Nombre_Curso)) VALUES (%s,%s)"
+    val = (args["tel"],args["ncurso"] )
 
     cursor.execute(sql, val)
     
