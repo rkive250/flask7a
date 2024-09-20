@@ -50,6 +50,7 @@ def buscar():
 
 @app.route("/evento", methods=["GET"])
 def evento():
+   args = request.args
    pusher_client = pusher.Pusher(
         app_id='1864232',
         key='ec020425c2206acb32eb',
@@ -59,6 +60,7 @@ def evento():
     )
 
     if not con.is_connected():
+    
         con.reconnect()
 
     cursor = con.cursor()
