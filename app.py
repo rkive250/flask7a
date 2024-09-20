@@ -1,8 +1,6 @@
-from flask import Flask, render_template, request
-import pusher
+from flask import Flask, render_template, request, jsonify
 import mysql.connector
-import datetime
-import pytz
+import pusher
 
 app = Flask(__name__)
 
@@ -42,7 +40,8 @@ def buscar():
     cursor.close()
     con.close()
 
-    return str(registros)
+    # Devolver los registros en formato JSON
+    return jsonify(data=registros)
 
 @app.route("/evento", methods=["GET"])
 def evento():
