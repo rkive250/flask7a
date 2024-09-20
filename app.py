@@ -50,6 +50,14 @@ def buscar():
 
 @app.route("/evento", methods=["GET"])
 def evento():
+   pusher_client = pusher.Pusher(
+        app_id='1864232',
+        key='ec020425c2206acb32eb',
+        secret='a5091fe74dbda031cda4',
+        cluster='us2',
+        ssl=True
+    )
+
     if not con.is_connected():
         con.reconnect()
 
@@ -65,12 +73,6 @@ def evento():
     con.commit()
     con.close()
 
-    pusher_client = pusher.Pusher(
-        app_id='1864232',
-        key='ec020425c2206acb32eb',
-        secret='a5091fe74dbda031cda4',
-        cluster='us2',
-        ssl=True
-    )
-
+   
     pusher_client.trigger("conexion", "evento", request.args)
+    return args
