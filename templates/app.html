@@ -19,8 +19,6 @@
                 <tr>
                     <th>Telefono</th>
                     <th>Nombre_Curso</th>
-
-                    
                 </tr>
             </thead>
             <tbody id="tbodyLog"></tbody>
@@ -32,44 +30,39 @@
     <script>
         function buscar() {
             $.get("/buscar", function (respuesta) {
-                $("#tbodyLog").html("")
+                $("#tbodyLog").html("")  // Limpia la tabla
 
-                for (var x in respuesta) {
-                    var registro = respuesta[x]
+                // Accede a los registros desde respuesta.data
+                var registros = respuesta.data;
 
+                for (var x in registros) {
+                    var registro = registros[x];
+
+                    // Inserta las filas en la tabla
                     $("#tbodyLog").append(`<tr>
                         <td>${registro[1]}</td>
                         <td>${registro[2]}</td>
-
-                    </tr>`)
+                    </tr>`);
                 }
-            })
+            });
         }
 
         buscar()
 
-        // Enable pusher logging - don't include this in production
-        Pusher.logToConsole = true
-        
+        // Habilita el logging de pusher - no incluir en producción
+        Pusher.logToConsole = true;
+
         var pusher = new Pusher("ec020425c2206acb32eb", {
             cluster: "us2"
-        })
-        
+        });
+
         // Canal -> Conexion
         var channel = pusher.subscribe("conexion");
+
         // Evento: Acción de la aplicación
         channel.bind("evento", function (mensaje) {
-            // alert("Ya ocurrió el evento en la aplicación")
-            /**
-            $("#tbodyLog").append(`<tr>
-                <td>${mensaje["tel"]}</td>
-                <td>${mensaje["ncurso"]}</td>
-
-                <
-            </tr>`)
-            */
-            buscar()
-        })
+            buscar();  // Refresca la tabla cuando ocurra el evento
+        });
     </script>
 </body>
 </html>
