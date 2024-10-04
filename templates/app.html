@@ -14,10 +14,24 @@
 </head>
 <body>
     <div class="container">
+        <!-- Formulario para agregar un nuevo registro -->
+        <form id="formGuardar" class="mb-3">
+            <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input type="text" class="form-control" id="telefono" name="tel" required>
+            </div>
+            <div class="mb-3">
+                <label for="nombreCurso" class="form-label">Nombre del Curso</label>
+                <input type="text" class="form-control" id="nombreCurso" name="ncurso" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+
+        <!-- Tabla que muestra los registros -->
         <table class="table table-sm">
             <thead>
                 <tr>
-                    <th>Telefono</th>
+                    <th>Teléfono</th>
                     <th>Nombre_Curso</th>
                 </tr>
             </thead>
@@ -28,17 +42,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script>
+        // Función para buscar y mostrar los registros en la tabla
         function buscar() {
             $.get("/buscar", function (respuesta) {
-                $("#tbodyLog").html("")  // Limpia la tabla
+                $("#tbodyLog").html("");  // Limpia la tabla
 
-                // Accede a los registros desde respuesta.data
                 var registros = respuesta.data;
 
                 for (var x in registros) {
                     var registro = registros[x];
 
-                    // Inserta las filas en la tabla
                     $("#tbodyLog").append(`<tr>
                         <td>${registro[1]}</td>
                         <td>${registro[2]}</td>
@@ -47,21 +60,30 @@
             });
         }
 
-        buscar()
+        buscar();
 
-        // Habilita el logging de pusher - no incluir en producción
+        // Capturar el evento de submit del formulario para agregar un nuevo registro
+        $("#formGuardar").on("submit", function (e) {
+            e.preventDefault();  // Evitar el envío tradicional del formulario
+
+            var formData = $(this).serialize();  // Serializa los datos del formulario
+
+            $.post("/alumnos/guardar", formData, function (respuesta) {
+                alert(respuesta);  // Opcional: muestra la respuesta del servidor
+                buscar();  // Refresca la tabla después de insertar el nuevo registro
+            });
+        });
+
+        // Pusher logging - no incluir en producción
         Pusher.logToConsole = true;
 
         var pusher = new Pusher("ec020425c2206acb32eb", {
             cluster: "us2"
         });
 
-        // Canal -> Conexion
         var channel = pusher.subscribe("conexion");
-
-        // Evento: Acción de la aplicación
-        channel.bind("evento", function (mensaje) {
-            buscar();  // Refresca la tabla cuando ocurra el evento
+        channel.bind("evento", function () {
+            buscar();  // Refresca la tabla cuando ocurra un nuevo evento
         });
     </script>
 </body>
