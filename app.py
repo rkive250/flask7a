@@ -44,9 +44,6 @@ def alumnosActualizar():
     telefono = request.form["tel"]
     nombre_curso = request.form["ncurso"]
 
-    # Imprimir para depurar si los valores están llegando correctamente
-    print(f"ID del curso: {id_curso}, Teléfono: {telefono}, Nombre del curso: {nombre_curso}")
-
     con = get_db_connection()
     cursor = con.cursor()
 
