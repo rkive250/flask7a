@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, jsonify
 import mysql.connector
-import pusher
 
 app = Flask(__name__)
 
@@ -77,13 +76,19 @@ def alumnosEliminar():
     return "Registro eliminado correctamente"
 
 # Ruta para buscar y devolver los registros de la tabla en formato JSON
-@app.route("/buscar")
+@app.route("/buscar", methods=["GET"])
 def buscar():
+    nombre_curso = request.args.get("ncurso", "")  # Obtiene el parámetro de búsqueda
     con = get_db_connection()
     cursor = con.cursor()
-    cursor.execute("SELECT * FROM tst0_cursos")
-    registros = cursor.fetchall()
 
+    if nombre_curso:
+        sql = "SELECT * FROM tst0_cursos WHERE Nombre_Curso LIKE %s"
+        cursor.execute(sql, ('%' + nombre_curso + '%',))
+    else:
+        cursor.execute("SELECT * FROM tst0_cursos")
+
+    registros = cursor.fetchall()
     cursor.close()
     con.close()
 
