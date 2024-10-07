@@ -18,7 +18,7 @@
 
         <!-- Formulario para agregar o actualizar un registro -->
         <form id="formGuardar" class="mb-3">
-            <input type="hidden" id="idCurso" name="id" value=""> <!-- Campo oculto para almacenar el id del curso (cuando se edita) -->
+            <input type="hidden" id="idCurso" name="id" value="">
             <div class="mb-3">
                 <label for="telefono" class="form-label">Teléfono</label>
                 <input type="text" class="form-control" id="telefono" name="tel" required>
@@ -50,7 +50,7 @@
         // Función para buscar y mostrar los registros (con o sin filtro)
         function buscar(nombreCurso = "") {
             $.get("/buscar", { ncurso: nombreCurso }, function (respuesta) {
-                $("#tbodyLog").html("");  // Limpia la tabla
+                $("#tbodyLog").html("");
 
                 var registros = respuesta.data;
 
@@ -90,7 +90,7 @@
         // Evento del botón buscar
         $("#btnBuscar").click(function() {
             var nombreCurso = $("#buscarNombre").val();
-            buscar(nombreCurso);  // Llama la función con el nombre del curso a buscar
+            buscar(nombreCurso);
         });
 
         buscar();  // Cargar todos los registros al inicio
@@ -99,11 +99,11 @@
         $("#formGuardar").on("submit", function (e) {
             e.preventDefault();  // Evita el envío tradicional del formulario
 
-            var formData = $(this).serialize();  // Serializa los datos del formulario
-            var action = $("#idCurso").val() ? "/alumnos/actualizar" : "/alumnos/guardar";  // Cambia la acción según si es actualizar o guardar
+            var formData = $(this).serialize();
+            var action = $("#idCurso").val() ? "/alumnos/actualizar" : "/alumnos/guardar";  // Actualiza o guarda
 
             $.post(action, formData, function (respuesta) {
-                alert(respuesta);  // Opcional: muestra la respuesta del servidor
+                alert(respuesta);
                 buscar();  // Refresca la tabla
                 limpiarFormulario();
             });
@@ -113,22 +113,23 @@
         function eliminar(id) {
             if (confirm("¿Estás seguro de que deseas eliminar este registro?")) {
                 $.post("/alumnos/eliminar", { id: id }, function (respuesta) {
-                    alert(respuesta);  // Opcional: muestra la respuesta del servidor
+                    alert(respuesta);
                     buscar();  // Refresca la tabla
                 });
             }
         }
 
-        // Función para limpiar el formulario después de guardar o actualizar
+        // Función para limpiar el formulario
         function limpiarFormulario() {
-            $("#formGuardar")[0].reset();  // Resetea el formulario
-            $("#idCurso").val("");  // Limpia el campo oculto de ID
+            $("#idCurso").val("");
+            $("#telefono").val("");
+            $("#nombreCurso").val("");
             $("#formGuardar button[type=submit]").text("Guardar");
             $("#cancelarEdicion").addClass("d-none");
         }
 
-        // Botón de cancelar edición
-        $("#cancelarEdicion").click(function () {
+        // Evento del botón cancelar
+        $("#cancelarEdicion").click(function() {
             limpiarFormulario();
         });
     </script>
