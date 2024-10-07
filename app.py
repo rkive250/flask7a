@@ -98,7 +98,7 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 
-    return jsonify(data=registros)
+return jsonify(data=registros)
 
 if __name__ == "__main__":
     app.run(debug=True)
