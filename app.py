@@ -78,14 +78,14 @@ def alumnosEliminar():
 # Ruta para buscar y devolver los registros de la tabla en formato JSON
 @app.route("/buscar", methods=["GET"])
 def buscar():
-    nombre_curso = request.args.get("ncurso", "")  # Obtiene el parámetro de búsqueda
+    nombre_curso = request.args.get("ncurso", "")  # Obtiene el parámetro de búsqueda (opcional)
     con = get_db_connection()
     cursor = con.cursor()
 
-    if nombre_curso:
+    if nombre_curso:  # Si se proporciona un nombre de curso para buscar
         sql = "SELECT * FROM tst0_cursos WHERE Nombre_Curso LIKE %s"
         cursor.execute(sql, ('%' + nombre_curso + '%',))
-    else:
+    else:  # Si no se proporciona un nombre, muestra todos los registros
         cursor.execute("SELECT * FROM tst0_cursos")
 
     registros = cursor.fetchall()
