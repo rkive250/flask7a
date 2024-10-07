@@ -44,6 +44,9 @@ def alumnosActualizar():
     telefono = request.form["tel"]
     nombre_curso = request.form["ncurso"]
 
+    # Imprimir para depurar si los valores están llegando correctamente
+    print(f"ID del curso: {id_curso}, Teléfono: {telefono}, Nombre del curso: {nombre_curso}")
+
     con = get_db_connection()
     cursor = con.cursor()
 
@@ -91,6 +94,12 @@ def buscar():
     registros = cursor.fetchall()
     cursor.close()
     con.close()
+
+    return jsonify(data=registros)
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
 
     return jsonify(data=registros)
 
