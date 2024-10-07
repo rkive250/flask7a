@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <title>App CRUD</title>
 </head>
 <body>
@@ -18,7 +18,7 @@
 
         <!-- Formulario para agregar o actualizar un registro -->
         <form id="formGuardar" class="mb-3">
-            <input type="hidden" id="idCurso" name="id" value="">
+            <input type="hidden" id="idCurso" name="id" value=""> <!-- Campo oculto para almacenar el id del curso (cuando se edita) -->
             <div class="mb-3">
                 <label for="telefono" class="form-label">Teléfono</label>
                 <input type="text" class="form-control" id="telefono" name="tel" required>
@@ -44,7 +44,10 @@
         </table>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
     <script>
+        // Función para buscar y mostrar los registros (con o sin filtro)
         function buscar(nombreCurso = "") {
             $.get("/buscar", { ncurso: nombreCurso }, function (respuesta) {
                 $("#tbodyLog").html("");  // Limpia la tabla
@@ -64,6 +67,7 @@
                     </tr>`);
                 }
 
+                // Asigna eventos a los botones de editar y eliminar
                 $(".editar").click(function() {
                     var id = $(this).data("id");
                     var tel = $(this).data("tel");
@@ -83,44 +87,48 @@
             });
         }
 
+        // Evento del botón buscar
         $("#btnBuscar").click(function() {
             var nombreCurso = $("#buscarNombre").val();
-            buscar(nombreCurso);  
+            buscar(nombreCurso);  // Llama la función con el nombre del curso a buscar
         });
 
         buscar();  // Cargar todos los registros al inicio
 
+        // Función para enviar el formulario (crear o actualizar)
         $("#formGuardar").on("submit", function (e) {
-            e.preventDefault();  
+            e.preventDefault();  // Evita el envío tradicional del formulario
 
-            var formData = $(this).serialize();  
-            var action = $("#idCurso").val() ? "/alumnos/actualizar" : "/alumnos/guardar";  
+            var formData = $(this).serialize();  // Serializa los datos del formulario
+            var action = $("#idCurso").val() ? "/alumnos/actualizar" : "/alumnos/guardar";  // Cambia la acción según si es actualizar o guardar
 
             $.post(action, formData, function (respuesta) {
-                alert(respuesta);  
-                buscar();  
+                alert(respuesta);  // Opcional: muestra la respuesta del servidor
+                buscar();  // Refresca la tabla
                 limpiarFormulario();
             });
         });
 
+        // Función para eliminar un registro
         function eliminar(id) {
-            if (confirm("¿Estás seguro de que quieres eliminar este registro?")) {
+            if (confirm("¿Estás seguro de que deseas eliminar este registro?")) {
                 $.post("/alumnos/eliminar", { id: id }, function (respuesta) {
-                    alert(respuesta);  
-                    buscar();  
+                    alert(respuesta);  // Opcional: muestra la respuesta del servidor
+                    buscar();  // Refresca la tabla
                 });
             }
         }
 
+        // Función para limpiar el formulario después de guardar o actualizar
         function limpiarFormulario() {
-            $("#idCurso").val("");
-            $("#telefono").val("");
-            $("#nombreCurso").val("");
+            $("#formGuardar")[0].reset();  // Resetea el formulario
+            $("#idCurso").val("");  // Limpia el campo oculto de ID
             $("#formGuardar button[type=submit]").text("Guardar");
             $("#cancelarEdicion").addClass("d-none");
         }
 
-        $("#cancelarEdicion").click(function() {
+        // Botón de cancelar edición
+        $("#cancelarEdicion").click(function () {
             limpiarFormulario();
         });
     </script>
