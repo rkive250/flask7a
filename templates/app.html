@@ -27,6 +27,12 @@
             <button type="submit" class="btn btn-primary">Guardar</button>
         </form>
 
+        <div class="mb-3">
+            <label for="buscarNombre" class="form-label">Buscar por Nombre del Curso</label>
+            <input type="text" class="form-control" id="buscarNombre" placeholder="Ingrese el nombre del curso">
+            <button class="btn btn-secondary mt-2" id="btnBuscar">Buscar</button>
+        </div>
+
         <!-- Tabla que muestra los registros -->
         <table class="table table-sm">
             <thead>
@@ -58,6 +64,7 @@
                         <td>${registro[2]}</td>
                         <td>
                             <button class="btn btn-danger" onclick="eliminar(${registro[0]})">Eliminar</button>
+                            <button class="btn btn-warning" onclick="editar(${registro[0]})">Editar</button>
                         </td>
                     </tr>`);
                 }
@@ -78,21 +85,68 @@
             });
         });
 
+        // Función para buscar registros por nombre
+        $("#btnBuscar").on("click", function () {
+            var nombre = $("#buscarNombre").val();
+            $.get(`/alumnos/buscar/${nombre}`, function (respuesta) {
+                $("#tbodyLog").html("");  // Limpia la tabla
+
+                var registros = respuesta.data;
+
+                for (var x in registros) {
+                    var registro = registros[x];
+
+                    $("#tbodyLog").append(`<tr>
+                        <td>${registro[1]}</td>
+                        <td>${registro[2]}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="eliminar(${registro[0]})">Eliminar</button>
+                            <button class="btn btn-warning" onclick="editar(${registro[0]})">Editar</button>
+                        </td>
+                    </tr>`);
+                }
+            });
+        });
+
         // Función para eliminar un registro
-        function eliminar(idCurso) {
+        function eliminar(id_curso) {
             if (confirm("¿Estás seguro de que deseas eliminar este registro?")) {
                 $.ajax({
-                    url: `/alumnos/eliminar/${idCurso}`,
-                    type: "DELETE",
-                    success: function(response) {
-                        alert(response); // Muestra mensaje de éxito
-                        buscar(); // Refresca la tabla
+                    url: `/alumnos/eliminar/${id_curso}`,
+                    type: 'DELETE',
+                    success: function (respuesta) {
+                        alert(respuesta);
+                        buscar();  // Refresca la tabla después de eliminar
                     },
-                    error: function(xhr) {
-                        alert(`Error: ${xhr.responseText}`); // Muestra mensaje de error
+                    error: function (xhr, status, error) {
+                        alert("Error al eliminar el registro: " + xhr.responseText);
                     }
                 });
             }
+        }
+
+        // Función para editar un registro
+        function editar(id_curso) {
+            $.get(`/alumnos/editar/${id_curso}`, function (respuesta) {
+                var registro = respuesta.data;
+
+                // Cargar los datos en el formulario
+                $("#telefono").val(registro[1]);
+                $("#nombreCurso").val(registro[2]);
+
+                // Cambiar el botón de guardar a actualizar
+                $("#formGuardar").off("submit").on("submit", function (e) {
+                    e.preventDefault();  // Evitar el envío tradicional del formulario
+
+                    var formData = $(this).serialize() + `&id_curso=${id_curso}`;  // Agregar el ID del curso
+
+                    $.post(`/alumnos/editar/${id_curso}`, formData, function (respuesta) {
+                        alert(respuesta);
+                        buscar();  // Refresca la tabla después de actualizar
+                        $("#formGuardar")[0].reset();  // Limpiar el formulario
+                    });
+                });
+            });
         }
 
         // Pusher logging - no incluir en producción
