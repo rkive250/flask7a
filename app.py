@@ -69,6 +69,23 @@ def buscar():
     # Devolver los registros en formato JSON
     return jsonify(data=registros)
 
+# Ruta para buscar un registro por nombre
+@app.route("/alumnos/buscar/<nombre>", methods=["GET"])
+def buscarPorNombre(nombre):
+    con = get_db_connection()
+    if not con.is_connected():
+        con.reconnect()
+
+    cursor = con.cursor()
+    sql = "SELECT * FROM tst0_cursos WHERE Nombre_Curso LIKE %s"
+    cursor.execute(sql, ('%' + nombre + '%',))
+    registros = cursor.fetchall()
+
+    cursor.close()
+    con.close()
+
+    return jsonify(data=registros)
+
 # Ruta para eliminar un registro en la base de datos
 @app.route("/alumnos/eliminar/<int:id_curso>", methods=["DELETE"])
 def alumnosEliminar(id_curso):
@@ -96,5 +113,40 @@ def alumnosEliminar(id_curso):
         cursor.close()
         con.close()
 
+# Ruta para editar un registro en la base de datos
+@app.route("/alumnos/editar/<int:id_curso>", methods=["GET", "POST"])
+def alumnosEditar(id_curso):
+    con = get_db_connection()
+    if not con.is_connected():
+        con.reconnect()
+
+    cursor = con.cursor()
+
+    if request.method == "POST":
+        telefono = request.form["tel"]
+        nombre_curso = request.form["ncurso"]
+
+        try:
+            sql = "UPDATE tst0_cursos SET Telefono = %s, Nombre_Curso = %s WHERE Id_Curso = %s"
+            cursor.execute(sql, (telefono, nombre_curso, id_curso))
+            con.commit()
+
+            return f"Registro con ID {id_curso} actualizado correctamente", 200
+        except Exception as e:
+            return f"Error al actualizar el registro: {str(e)}", 500
+        finally:
+            cursor.close()
+            con.close()
+
+    # Si el método es GET, devuelve el registro para editarlo
+    cursor.execute("SELECT * FROM tst0_cursos WHERE Id_Curso = %s", (id_curso,))
+    registro = cursor.fetchone()
+
+    cursor.close()
+    con.close()
+
+    return jsonify(data=registro)
+
 if __name__ == "__main__":
     app.run(debug=True)
+
