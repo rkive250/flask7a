@@ -14,7 +14,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Formulario para agregar un nuevo registro -->
         <form id="formGuardar" class="mb-3">
             <div class="mb-3">
                 <label for="telefono" class="form-label">Teléfono</label>
@@ -33,7 +32,6 @@
             <button class="btn btn-secondary mt-2" id="btnBuscar">Buscar</button>
         </div>
 
-        <!-- Tabla que muestra los registros -->
         <table class="table table-sm">
             <thead>
                 <tr>
@@ -49,7 +47,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script>
-        // Función para buscar y mostrar los registros en la tabla
         function buscar() {
             $.get("/buscar", function (respuesta) {
                 $("#tbodyLog").html("");  // Limpia la tabla
@@ -73,23 +70,21 @@
 
         buscar();
 
-        // Capturar el evento de submit del formulario para agregar un nuevo registro
         $("#formGuardar").on("submit", function (e) {
-            e.preventDefault();  // Evitar el envío tradicional del formulario
+            e.preventDefault();  
 
-            var formData = $(this).serialize();  // Serializa los datos del formulario
+            var formData = $(this).serialize();  
 
             $.post("/alumnos/guardar", formData, function (respuesta) {
-                alert(respuesta);  // Opcional: muestra la respuesta del servidor
-                buscar();  // Refresca la tabla después de insertar el nuevo registro
+                alert(respuesta);  
+                buscar();  
             });
         });
 
-        // Función para buscar registros por nombre
         $("#btnBuscar").on("click", function () {
             var nombre = $("#buscarNombre").val();
             $.get(`/alumnos/buscar/${nombre}`, function (respuesta) {
-                $("#tbodyLog").html("");  // Limpia la tabla
+                $("#tbodyLog").html("");  
 
                 var registros = respuesta.data;
 
@@ -108,7 +103,6 @@
             });
         });
 
-        // Función para eliminar un registro
         function eliminar(id_curso) {
             if (confirm("¿Estás seguro de que deseas eliminar este registro?")) {
                 $.ajax({
@@ -116,7 +110,7 @@
                     type: 'DELETE',
                     success: function (respuesta) {
                         alert(respuesta);
-                        buscar();  // Refresca la tabla después de eliminar
+                        buscar();  
                     },
                     error: function (xhr, status, error) {
                         alert("Error al eliminar el registro: " + xhr.responseText);
@@ -125,31 +119,27 @@
             }
         }
 
-        // Función para editar un registro
         function editar(id_curso) {
             $.get(`/alumnos/editar/${id_curso}`, function (respuesta) {
                 var registro = respuesta.data;
 
-                // Cargar los datos en el formulario
                 $("#telefono").val(registro[1]);
                 $("#nombreCurso").val(registro[2]);
 
-                // Cambiar el botón de guardar a actualizar
                 $("#formGuardar").off("submit").on("submit", function (e) {
-                    e.preventDefault();  // Evitar el envío tradicional del formulario
+                    e.preventDefault();  
 
-                    var formData = $(this).serialize() + `&id_curso=${id_curso}`;  // Agregar el ID del curso
+                    var formData = $(this).serialize() + `&id_curso=${id_curso}`; 
 
                     $.post(`/alumnos/editar/${id_curso}`, formData, function (respuesta) {
                         alert(respuesta);
-                        buscar();  // Refresca la tabla después de actualizar
-                        $("#formGuardar")[0].reset();  // Limpiar el formulario
+                        buscar();  
+                        $("#formGuardar")[0].reset();  
                     });
                 });
             });
         }
 
-        // Pusher logging - no incluir en producción
         Pusher.logToConsole = true;
 
         var pusher = new Pusher("ec020425c2206acb32eb", {
@@ -158,7 +148,7 @@
 
         var channel = pusher.subscribe("conexion");
         channel.bind("evento", function () {
-            buscar();  // Refresca la tabla cuando ocurra un nuevo evento
+            buscar();  
         });
     </script>
 </body>
