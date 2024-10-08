@@ -32,7 +32,7 @@
             <thead>
                 <tr>
                     <th>Teléfono</th>
-                    <th>Nombre Curso</th>
+                    <th>Nombre_Curso</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -79,17 +79,17 @@
         });
 
         // Función para eliminar un registro
-        function eliminar(id) {
+        function eliminar(idCurso) {
             if (confirm("¿Estás seguro de que deseas eliminar este registro?")) {
                 $.ajax({
-                    url: `/alumnos/eliminar/${id}`,
-                    type: 'DELETE',
-                    success: function (respuesta) {
-                        alert(respuesta);
-                        buscar();  // Refresca la tabla después de eliminar el registro
+                    url: `/alumnos/eliminar/${idCurso}`,
+                    type: "DELETE",
+                    success: function(response) {
+                        alert(response); // Muestra mensaje de éxito
+                        buscar(); // Refresca la tabla
                     },
-                    error: function (xhr) {
-                        alert("Error al eliminar el registro: " + xhr.responseText);
+                    error: function(xhr) {
+                        alert(`Error: ${xhr.responseText}`); // Muestra mensaje de error
                     }
                 });
             }
