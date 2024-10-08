@@ -19,11 +19,6 @@ def get_db_connection():
 def index():
     return render_template("app.html")
 
-# Ruta para mostrar la página de alumnos (si es necesario)
-@app.route("/alumnos")
-def alumnos():
-    return render_template("alumnos.html")
-
 # Ruta para guardar los datos de un nuevo alumno en la base de datos
 @app.route("/alumnos/guardar", methods=["POST"])
 def alumnosGuardar():
@@ -71,8 +66,52 @@ def buscar():
     cursor.close()
     con.close()
 
-    # Devolver los registros en formato JSON
     return jsonify(data=registros)
+
+# Ruta para actualizar los datos de un alumno
+@app.route("/alumnos/actualizar", methods=["POST"])
+def alumnosActualizar():
+    id_curso = request.form["id"]
+    telefono = request.form["tel"]
+    nombre_curso = request.form["ncurso"]
+
+    con = get_db_connection()
+
+    if not con.is_connected():
+        con.reconnect()
+
+    cursor = con.cursor()
+
+    sql = "UPDATE tst0_cursos SET Telefono = %s, Nombre_Curso = %s WHERE id = %s"
+    val = (telefono, nombre_curso, id_curso)
+    cursor.execute(sql, val)
+    con.commit()
+
+    cursor.close()
+    con.close()
+
+    return f"Registro con ID {id_curso} actualizado correctamente"
+
+# Ruta para eliminar un registro
+@app.route("/alumnos/eliminar", methods=["POST"])
+def alumnosEliminar():
+    id_curso = request.form["id"]
+
+    con = get_db_connection()
+
+    if not con.is_connected():
+        con.reconnect()
+
+    cursor = con.cursor()
+
+    sql = "DELETE FROM tst0_cursos WHERE id = %s"
+    cursor.execute(sql, (id_curso,))
+    con.commit()
+
+    cursor.close()
+    con.close()
+
+    return f"Registro con ID {id_curso} eliminado correctamente"
 
 if __name__ == "__main__":
     app.run(debug=True)
