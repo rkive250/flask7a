@@ -32,25 +32,29 @@ def alumnosGuardar():
 
     cursor = con.cursor()
 
-    sql = "INSERT INTO tst0_cursos (Telefono, Nombre_Curso) VALUES (%s, %s)"
-    val = (telefono, nombre_curso)
-    cursor.execute(sql, val)
-    con.commit()
+    try:
+        sql = "INSERT INTO tst0_cursos (Telefono, Nombre_Curso) VALUES (%s, %s)"
+        val = (telefono, nombre_curso)
+        cursor.execute(sql, val)
+        con.commit()
 
-    cursor.close()
-    con.close()
+        # Emitir evento de Pusher
+        pusher_client = pusher.Pusher(
+            app_id='1864232',
+            key='ec020425c2206acb32eb',
+            secret='a5091fe74dbda031cda4',
+            cluster='us2',
+            ssl=True
+        )
+        pusher_client.trigger("conexion", "evento", {"tel": telefono, "ncurso": nombre_curso})
 
-    # Emitir evento de Pusher
-    pusher_client = pusher.Pusher(
-        app_id='1864232',
-        key='ec020425c2206acb32eb',
-        secret='a5091fe74dbda031cda4',
-        cluster='us2',
-        ssl=True
-    )
-    pusher_client.trigger("conexion", "evento", {"tel": telefono, "ncurso": nombre_curso})
+        return f"Teléfono {telefono} y curso {nombre_curso} guardados correctamente", 201
 
-    return f"Teléfono {telefono} y curso {nombre_curso} guardados correctamente"
+    except Exception as e:
+        return f"Error al guardar el registro: {str(e)}", 500
+    finally:
+        cursor.close()
+        con.close()
 
 # Ruta para buscar y devolver los registros de la tabla en formato JSON
 @app.route("/buscar")
@@ -66,30 +70,35 @@ def buscar():
     cursor.close()
     con.close()
 
+    # Devolver los registros en formato JSON
     return jsonify(data=registros)
 
-# Ruta para eliminar un registro por ID usando DELETE
+# Ruta para eliminar un registro
 @app.route("/alumnos/eliminar/<int:id>", methods=["DELETE"])
 def alumnosEliminar(id):
     con = get_db_connection()
-
     if not con.is_connected():
         con.reconnect()
 
     cursor = con.cursor()
+    
+    try:
+        sql = "DELETE FROM tst0_cursos WHERE id = %s"
+        cursor.execute(sql, (id,))
+        con.commit()
 
-    sql = "DELETE FROM tst0_cursos WHERE id = %s"
-    cursor.execute(sql, (id,))
-    con.commit()
+        affected_rows = cursor.rowcount  # Verifica cuántas filas se han afectado
 
-    affected_rows = cursor.rowcount  # Verifica cuántas filas se han afectado
-    cursor.close()
-    con.close()
+        if affected_rows > 0:
+            return f"Registro con ID {id} eliminado correctamente", 200
+        else:
+            return f"Error: No se pudo eliminar el registro con ID {id} o no existe", 404
 
-    if affected_rows > 0:
-        return f"Registro con ID {id} eliminado correctamente"
-    else:
-        return f"Error: No se pudo eliminar el registro con ID {id}", 400
+    except Exception as e:
+        return f"Error al eliminar el registro: {str(e)}", 500
+    finally:
+        cursor.close()
+        con.close()
 
 if __name__ == "__main__":
     app.run(debug=True)
