@@ -91,8 +91,8 @@
             $.get(`/alumnos/editar/${id_curso}`, function (respuesta) {
                 var registro = respuesta.data;
 
-                $("#telefono").val(registro[1]);  
-                $("#nombreCurso").val(registro[2]);  
+                $("#nombreCurso").val(registro[1]);  
+                $("#telefono").val(registro[2]);  
 
                 $("#formGuardar").off("submit").on("submit", function (e) {
                     e.preventDefault();  
