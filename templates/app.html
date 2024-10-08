@@ -9,6 +9,8 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
     <title>App</title>
+
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -30,13 +32,15 @@
             <thead>
                 <tr>
                     <th>Teléfono</th>
-                    <th>Nombre_Curso</th>
-                    <th>Acción</th>
+                    <th>Nombre Curso</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody id="tbodyLog"></tbody>
         </table>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
     <script>
         // Función para buscar y mostrar los registros en la tabla
@@ -53,7 +57,7 @@
                         <td>${registro[1]}</td>
                         <td>${registro[2]}</td>
                         <td>
-                            <button class="btn btn-danger btn-delete" data-id="${registro[0]}">Eliminar</button>
+                            <button class="btn btn-danger" onclick="eliminar(${registro[0]})">Eliminar</button>
                         </td>
                     </tr>`);
                 }
@@ -69,32 +73,39 @@
             var formData = $(this).serialize();  // Serializa los datos del formulario
 
             $.post("/alumnos/guardar", formData, function (respuesta) {
-                alert(respuesta);  // Muestra la respuesta del servidor
+                alert(respuesta);  // Opcional: muestra la respuesta del servidor
                 buscar();  // Refresca la tabla después de insertar el nuevo registro
             });
         });
 
-        // Capturar el evento de clic del botón de eliminar
-        $(document).on("click", ".btn-delete", function () {
-            var id = $(this).data("id");
-
-            if (confirm("¿Seguro que quieres eliminar este registro?")) {
-                // Realizamos la petición DELETE
+        // Función para eliminar un registro
+        function eliminar(id) {
+            if (confirm("¿Estás seguro de que deseas eliminar este registro?")) {
                 $.ajax({
                     url: `/alumnos/eliminar/${id}`,
-                    type: "DELETE",
+                    type: 'DELETE',
                     success: function (respuesta) {
                         alert(respuesta);
                         buscar();  // Refresca la tabla después de eliminar el registro
                     },
-                    error: function (error) {
-                        alert("Error al intentar eliminar el registro");
+                    error: function (xhr) {
+                        alert("Error al eliminar el registro: " + xhr.responseText);
                     }
                 });
             }
+        }
+
+        // Pusher logging - no incluir en producción
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher("ec020425c2206acb32eb", {
+            cluster: "us2"
+        });
+
+        var channel = pusher.subscribe("conexion");
+        channel.bind("evento", function () {
+            buscar();  // Refresca la tabla cuando ocurra un nuevo evento
         });
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
