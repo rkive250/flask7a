@@ -64,6 +64,7 @@
                     </tr>`);
                 }
 
+                // Editar
                 $(".editar").click(function() {
                     var id = $(this).data("id");
                     var tel = $(this).data("tel");
@@ -76,6 +77,7 @@
                     $("#cancelarEdicion").removeClass("d-none");
                 });
 
+                // Eliminar
                 $(".eliminar").click(function() {
                     var id = $(this).data("id");
                     eliminar(id);
@@ -90,6 +92,7 @@
 
         buscar();  // Cargar todos los registros al inicio
 
+        // Form submit
         $("#formGuardar").on("submit", function (e) {
             e.preventDefault();  
 
@@ -126,4 +129,3 @@
     </script>
 </body>
 </html>
-
