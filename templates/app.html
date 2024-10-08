@@ -4,17 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <title>App</title>
 
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <!-- Formulario para agregar un nuevo registro -->
         <form id="formGuardar" class="mb-3">
             <div class="mb-3">
                 <label for="telefono" class="form-label">Teléfono</label>
@@ -27,34 +25,36 @@
             <button type="submit" class="btn btn-primary">Guardar</button>
         </form>
 
-        <!-- Tabla que muestra los registros -->
         <table class="table table-sm">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Teléfono</th>
                     <th>Nombre_Curso</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody id="tbodyLog"></tbody>
         </table>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
     <script>
-        // Función para buscar y mostrar los registros en la tabla
         function buscar() {
             $.get("/buscar", function (respuesta) {
-                $("#tbodyLog").html("");  // Limpia la tabla
+                $("#tbodyLog").html("");
 
                 var registros = respuesta.data;
 
                 for (var x in registros) {
                     var registro = registros[x];
-
                     $("#tbodyLog").append(`<tr>
+                        <td>${registro[0]}</td>
                         <td>${registro[1]}</td>
                         <td>${registro[2]}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm btn-edit" data-id="${registro[0]}" data-telefono="${registro[1]}" data-curso="${registro[2]}">Editar</button>
+                            <button class="btn btn-danger btn-sm btn-delete" data-id="${registro[0]}">Eliminar</button>
+                        </td>
                     </tr>`);
                 }
             });
@@ -62,28 +62,49 @@
 
         buscar();
 
-        // Capturar el evento de submit del formulario para agregar un nuevo registro
         $("#formGuardar").on("submit", function (e) {
-            e.preventDefault();  // Evitar el envío tradicional del formulario
+            e.preventDefault();
 
-            var formData = $(this).serialize();  // Serializa los datos del formulario
+            var formData = $(this).serialize();
 
             $.post("/alumnos/guardar", formData, function (respuesta) {
-                alert(respuesta);  // Opcional: muestra la respuesta del servidor
-                buscar();  // Refresca la tabla después de insertar el nuevo registro
+                alert(respuesta);
+                buscar();
             });
         });
 
-        // Pusher logging - no incluir en producción
-        Pusher.logToConsole = true;
+        // Editar registro
+        $(document).on("click", ".btn-edit", function () {
+            var id = $(this).data("id");
+            var telefono = prompt("Nuevo teléfono", $(this).data("telefono"));
+            var curso = prompt("Nuevo nombre del curso", $(this).data("curso"));
 
-        var pusher = new Pusher("ec020425c2206acb32eb", {
-            cluster: "us2"
+            if (telefono && curso) {
+                $.post("/alumnos/actualizar", { id: id, tel: telefono, ncurso: curso }, function (respuesta) {
+                    alert(respuesta);
+                    buscar();
+                });
+            }
         });
 
+        // Eliminar registro
+        $(document).on("click", ".btn-delete", function () {
+            var id = $(this).data("id");
+
+            if (confirm("¿Seguro que quieres eliminar este registro?")) {
+                $.post("/alumnos/eliminar", { id: id }, function (respuesta) {
+                    alert(respuesta);
+                    buscar();
+                });
+            }
+        });
+
+        Pusher.logToConsole = true;
+
+        var pusher = new Pusher("ec020425c2206acb32eb", { cluster: "us2" });
         var channel = pusher.subscribe("conexion");
         channel.bind("evento", function () {
-            buscar();  // Refresca la tabla cuando ocurra un nuevo evento
+            buscar();
         });
     </script>
 </body>
