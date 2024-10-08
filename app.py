@@ -4,7 +4,6 @@ import pusher
 
 app = Flask(__name__)
 
-# Configuración para conectar con la base de datos
 def get_db_connection():
     con = mysql.connector.connect(
         host="185.232.14.52",
@@ -14,12 +13,10 @@ def get_db_connection():
     )
     return con
 
-# Ruta principal que muestra el archivo HTML
 @app.route("/")
 def index():
     return render_template("app.html")
 
-# Ruta para guardar los datos de un nuevo alumno en la base de datos
 @app.route("/alumnos/guardar", methods=["POST"])
 def alumnosGuardar():
     telefono = request.form["tel"]
@@ -52,7 +49,6 @@ def alumnosGuardar():
 
     return f"Teléfono {telefono} y curso {nombre_curso} guardados correctamente"
 
-# Ruta para buscar y devolver los registros de la tabla en formato JSON
 @app.route("/buscar")
 def buscar():
     con = get_db_connection()
@@ -86,7 +82,6 @@ def buscarPorNombre(nombre):
 
     return jsonify(data=registros)
 
-# Ruta para eliminar un registro en la base de datos
 @app.route("/alumnos/eliminar/<int:id_curso>", methods=["DELETE"])
 def alumnosEliminar(id_curso):
     con = get_db_connection()
@@ -100,7 +95,7 @@ def alumnosEliminar(id_curso):
         cursor.execute(sql, (id_curso,))
         con.commit()
 
-        affected_rows = cursor.rowcount  # Verifica cuántas filas se han afectado
+        affected_rows = cursor.rowcount  
 
         if affected_rows > 0:
             return f"Registro con ID {id_curso} eliminado correctamente", 200
@@ -113,7 +108,6 @@ def alumnosEliminar(id_curso):
         cursor.close()
         con.close()
 
-# Ruta para editar un registro en la base de datos
 @app.route("/alumnos/editar/<int:id_curso>", methods=["GET", "POST"])
 def alumnosEditar(id_curso):
     con = get_db_connection()
@@ -138,7 +132,6 @@ def alumnosEditar(id_curso):
             cursor.close()
             con.close()
 
-    # Si el método es GET, devuelve el registro para editarlo
     cursor.execute("SELECT * FROM tst0_cursos WHERE Id_Curso = %s", (id_curso,))
     registro = cursor.fetchone()
 
