@@ -68,35 +68,9 @@ def buscar():
 
     return jsonify(data=registros)
 
-# Ruta para actualizar los datos de un alumno
-@app.route("/alumnos/actualizar", methods=["POST"])
-def alumnosActualizar():
-    id_curso = request.form["id"]
-    telefono = request.form["tel"]
-    nombre_curso = request.form["ncurso"]
-
-    con = get_db_connection()
-
-    if not con.is_connected():
-        con.reconnect()
-
-    cursor = con.cursor()
-
-    sql = "UPDATE tst0_cursos SET Telefono = %s, Nombre_Curso = %s WHERE id = %s"
-    val = (telefono, nombre_curso, id_curso)
-    cursor.execute(sql, val)
-    con.commit()
-
-    cursor.close()
-    con.close()
-
-    return f"Registro con ID {id_curso} actualizado correctamente"
-
-# Ruta para eliminar un registro
-@app.route("/alumnos/eliminar", methods=["POST"])
-def alumnosEliminar():
-    id_curso = request.form["id"]
-
+# Ruta para eliminar un registro por ID usando DELETE
+@app.route("/alumnos/eliminar/<int:id>", methods=["DELETE"])
+def alumnosEliminar(id):
     con = get_db_connection()
 
     if not con.is_connected():
@@ -105,13 +79,17 @@ def alumnosEliminar():
     cursor = con.cursor()
 
     sql = "DELETE FROM tst0_cursos WHERE id = %s"
-    cursor.execute(sql, (id_curso,))
+    cursor.execute(sql, (id,))
     con.commit()
 
+    affected_rows = cursor.rowcount  # Verifica cuántas filas se han afectado
     cursor.close()
     con.close()
 
-    return f"Registro con ID {id_curso} eliminado correctamente"
+    if affected_rows > 0:
+        return f"Registro con ID {id} eliminado correctamente"
+    else:
+        return f"Error: No se pudo eliminar el registro con ID {id}", 400
 
 if __name__ == "__main__":
     app.run(debug=True)
