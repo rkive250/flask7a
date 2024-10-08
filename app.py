@@ -95,4 +95,4 @@ def buscar():
     return jsonify(data=registros)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True)  
