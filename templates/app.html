@@ -11,6 +11,16 @@
             background-color: #e6ffe6;
             color: #333;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Centrar verticalmente */
+            margin: 0;
+        }
+        h1 {
+            font-size: 48px; /* Aumentar tamaño de la fuente */
+            margin-bottom: 20px;
         }
         .button {
             background-color: #4caf50; /* color verde */
@@ -21,19 +31,25 @@
             text-decoration: none;
             display: inline-block;
             font-size: 16px;
-            margin: 4px 2px;
+            margin: 10px; /* Espacio entre botones */
             cursor: pointer;
             border-radius: 5px;
+            transition: background-color 0.3s; /* Transición suave al pasar el mouse */
+        }
+        .button:hover {
+            background-color: #45a049; /* Color al pasar el mouse */
         }
     </style>
 </head>
 <body>
-    <center></center><h1>Bienvenido a Wonho's Library</h1></center>
+    <h1>Bienvenido a Wonhos Library</h1>
     <div>
         <a href="/reserva" class="button">Reserva</a>
         <a href="/buscar" class="button">Buscar</a>
         <a href="/categorias" class="button">Categorías</a>
         <a href="/ocupados" class="button">Ocupados</a>
+        <a href="/inicio-sesion" class="button">Inicio de Sesión</a>
+        <a href="/proximos-stock" class="button">Próximos a Salir de Stock</a>
     </div>
 </body>
 </html>
