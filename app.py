@@ -32,6 +32,17 @@ def ocupados():
     # Aquí puedes manejar la lógica para mostrar libros ocupados
     return render_template('app.html')
 
+@app.route('/inicio-sesion', methods=['GET', 'POST'])
+def inicio_sesion():
+    if request.method == 'POST':
+        # Aquí puedes manejar la lógica para iniciar sesión
+        return "Inicio de sesión realizado."
+    return render_template('app.html')
+
+@app.route('/proximos-stock')
+def proximos_stock():
+    # Aquí puedes manejar la lógica para mostrar libros próximos a salir de stock
+    return render_template('app.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
-
