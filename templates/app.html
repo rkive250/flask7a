@@ -3,58 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
-    <title>Wonhos Library</title>
-    <style>
-        body {
-            font-family: 'Kalam', cursive;
-            background-color: #e6ffe6;
-            color: #333;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh; 
-            margin: 0;
-        }
-        h1 {
-            font-size: 48px; 
-            margin-bottom: 20px;
-        }
-        .button {
-            background-color: #4caf50; 
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 10px; 
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s; 
-        }
-        .button:hover {
-            background-color: #45a049; 
-        }
-        img {
-            width: 150px; 
-            margin-bottom: 20px; 
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <title>App</title>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 </head>
 <body>
-    <img src="https://png.pngtree.com/png-clipart/20231017/original/pngtree-books-line-art-png-image_13327388.png" alt="Libros" />
-    <h1> Wonho's Library</h1>
-    <div>
-        <a href="/reserva" class="button">Reserva</a>
-        <a href="/buscar" class="button">Buscar</a>
-        <a href="/categorias" class="button">Categorías</a>
-        <a href="/ocupados" class="button">Ocupados</a>
-        <a href="/inicio-sesion" class="button">Inicio de Sesión</a>
-        <a href="/proximos-stock" class="button">Próximos a Salir de Stock</a>
+    <div class="container">
+        <form id="formGuardar" class="mb-3">
+            <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input type="text" class="form-control" id="telefono" name="tel" required>
+            </div>
+            <div class="mb-3">
+                <label for="nombreCurso" class="form-label">Nombre del Curso</label>
+                <input type="text" class="form-control" id="nombreCurso" name="ncurso" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Nombre del Curso</th>
+                    <th>Telefono<th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyLog"></tbody>
+        </table>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <script>
+        function buscar() {
+            $.get("/buscar", function (respuesta) {
+                $("#tbodyLog").html("");  
+
+                var registros = respuesta.data;
+
+                for (var x in registros) {
+                    var registro = registros[x];
+
+                    $("#tbodyLog").append(<tr>
+                        <td>${registro[1]}</td>
+                        <td>${registro[2]}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="eliminar(${registro[0]})">Eliminar</button>
+                            <button class="btn btn-warning" onclick="editar(${registro[0]})">Editar</button>
+                        </td>
+                    </tr>);
+                }
+            });
+        }
+
+        buscar();
+
+        $("#formGuardar").on("submit", function (e) {
+            e.preventDefault();  
+
+            var formData = $(this).serialize();  
+
+            $.post("/alumnos/guardar", formData, function (respuesta) {
+                alert(respuesta);  
+                buscar();  
+            });
+        });
+
+        function eliminar(id_curso) {
+            if (confirm("¿Estás seguro de que deseas eliminar este registro?")) {
+                $.ajax({
+                    url: /alumnos/eliminar/${id_curso},
+                    type: 'DELETE',
+                    success: function (respuesta) {
+                        alert(respuesta);
+                        buscar();  
+                    },
+                    error: function (xhr, status, error) {
+                        alert("Error al eliminar el registro: " + xhr.responseText);
+                    }
+                });
+            }
+        }
+
+        function editar(id_curso) {
+            $.get(/alumnos/editar/${id_curso}, function (respuesta) {
+                var registro = respuesta.data;
+
+                $("#nombreCurso").val(registro[1]);  
+                $("#telefono").val(registro[2]);  
+
+                $("#formGuardar").off("submit").on("submit", function (e) {
+                    e.preventDefault();  
+
+                    var formData = $(this).serialize() + &id_curso=${id_curso};  
+
+                    $.post(/alumnos/editar/${id_curso}, formData, function (respuesta) {
+                        alert(respuesta);
+                        buscar();  
+                        $("#formGuardar")[0].reset();  
+                    });
+                });
+            });
+        }
+
+        var pusher = new Pusher('ec020425c2206acb32eb', {
+            cluster: 'us2'
+        });
+
+        var channel = pusher.subscribe('conexion');
+        channel.bind('evento', function(data) {
+            alert('Nuevo registro agregado: ' + data.tel + ', ' + data.ncurso);
+            buscar();  
+        });
+    </script>
 </body>
-</html>
+</html> 
