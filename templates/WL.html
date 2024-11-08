@@ -6,53 +6,68 @@
     <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
     <title>WELCOME TO WL</title>
     <style>
+        /* Configura el margen de la página y el borde negro */
         body {
             font-family: 'Kalam', cursive;
             background-color: #ffffff;
             color: #333;
             text-align: center;
+            height: 100vh;
+            margin: 0;
+            padding: 2cm;
+            box-sizing: border-box;
+            border: 2cm solid black;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh; 
-            margin: 0;
-            border: 2cm solid black; /* Agrega un borde de 2 cm de grosor alrededor de la página */
-            box-sizing: border-box;
         }
+        /* Estilo para el título */
         h1 {
-            font-size: 32px; /* Tamaño de letra más pequeño */
-            font-style: italic; /* Hace la letra cursiva */
+            font-size: 24px; /* Tamaño de letra más pequeño */
+            font-style: italic;
             margin-bottom: 20px;
         }
-        .button {
-            background-color: #4caf50; 
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 10px; 
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s; 
-        }
-        .button:hover {
-            background-color: #45a049; 
-        }
+        /* Estilo de la imagen */
         img {
             width: 420px;
             height: 400px;
             margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        /* Estilo para los botones */
+        .button {
+            background-color: #333; /* Botones del color del borde */
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        /* Efecto de hover para los botones */
+        .button:hover {
+            background-color: #4caf50;
+        }
+        /* Contenedor de los botones con estilo para el borde negro */
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+            padding-top: 20px;
         }
     </style>
 </head>
 <body>
     <img src="https://i.imgur.com/F47bLWm.png" alt="Descripción de la imagen">
-    <h1> Bienvenido a Wonho's Library <hr> donde siempre hay un libro esperando por ti</h1>
-    <div>
+    <h1>Bienvenido a Wonho's Library <br> donde siempre hay un libro esperando por ti</h1>
+    <div class="button-container">
         <a href="/reserva" class="button">Reserva</a>
         <a href="/buscar" class="button">Buscar</a>
         <a href="/categorias" class="button">Categorías</a>
@@ -62,4 +77,3 @@
     </div>
 </body>
 </html>
-
