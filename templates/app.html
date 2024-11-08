@@ -25,8 +25,8 @@
         <table class="table table-sm">
             <thead>
                 <tr>
-                    <th>Teléfono</th>
                     <th>Nombre del Curso</th>
+                    <th>Telefono<th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -46,14 +46,14 @@
                 for (var x in registros) {
                     var registro = registros[x];
 
-                    $("#tbodyLog").append(`<tr>
+                    $("#tbodyLog").append(<tr>
                         <td>${registro[1]}</td>
                         <td>${registro[2]}</td>
                         <td>
                             <button class="btn btn-danger" onclick="eliminar(${registro[0]})">Eliminar</button>
                             <button class="btn btn-warning" onclick="editar(${registro[0]})">Editar</button>
                         </td>
-                    </tr>`);
+                    </tr>);
                 }
             });
         }
@@ -74,7 +74,7 @@
         function eliminar(id_curso) {
             if (confirm("¿Estás seguro de que deseas eliminar este registro?")) {
                 $.ajax({
-                    url: `/alumnos/eliminar/${id_curso}`,
+                    url: /alumnos/eliminar/${id_curso},
                     type: 'DELETE',
                     success: function (respuesta) {
                         alert(respuesta);
@@ -88,18 +88,18 @@
         }
 
         function editar(id_curso) {
-            $.get(`/alumnos/editar/${id_curso}`, function (respuesta) {
+            $.get(/alumnos/editar/${id_curso}, function (respuesta) {
                 var registro = respuesta.data;
 
-                $("#telefono").val(registro[1]);  
-                $("#nombreCurso").val(registro[2]);  
+                $("#nombreCurso").val(registro[1]);  
+                $("#telefono").val(registro[2]);  
 
                 $("#formGuardar").off("submit").on("submit", function (e) {
                     e.preventDefault();  
 
-                    var formData = $(this).serialize() + `&id_curso=${id_curso}`;  
+                    var formData = $(this).serialize() + &id_curso=${id_curso};  
 
-                    $.post(`/alumnos/editar/${id_curso}`, formData, function (respuesta) {
+                    $.post(/alumnos/editar/${id_curso}, formData, function (respuesta) {
                         alert(respuesta);
                         buscar();  
                         $("#formGuardar")[0].reset();  
