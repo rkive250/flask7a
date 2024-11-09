@@ -9,10 +9,7 @@
         /* Configura el margen de la página y el borde negro */
         body {
             font-family: 'Kalam', cursive;
-            background-image: url('https://image.slidesdocs.com/responsive-images/background/image-crumpled-texture-of-lined-notebook-paper-powerpoint-background_458fc87524__960_540.jpg');
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
+            background-color: #ffffff;
             color: #333;
             text-align: center;
             height: 100vh;
@@ -31,23 +28,12 @@
             font-style: italic;
             margin-bottom: 20px;
         }
-        /* Contenedor circular para la imagen */
-        .image-container {
-            width: 450px;
-            height: 450px;
-            border-radius: 50%;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Estilo de la imagen */
+        img {
+            width: 420px;
+            height: 400px;
             margin-bottom: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-        /* Estilo de la imagen para que se ajuste al contenedor */
-        .image-container img {
-            width: 80%;
-            height: 80%;
-            object-fit: cover;
+            box-sizing: border-box;
         }
         /* Estilo para los botones */
         .button {
@@ -79,10 +65,8 @@
     </style>
 </head>
 <body>
-    <div class="image-container">
-        <img src="https://i.imgur.com/F47bLWm.png" alt="Descripción de la imagen">
-    </div>
-    <h1>Bienvenido a Wonhos Library</h1>
+    <img src="https://i.imgur.com/F47bLWm.png" alt="Descripción de la imagen">
+    <h1></h1>
     <div class="button-container">
         <a href="/reserva" class="button">Reserva</a>
         <a href="/buscar" class="button">Buscar</a>
@@ -92,5 +76,4 @@
         <a href="/proximos-stock" class="button">Próximos a Salir de Stock</a>
     </div>
 </body>
-</html>
-
+</html> 
