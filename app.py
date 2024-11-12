@@ -15,7 +15,7 @@ def get_db_connection():
 
 @app.route("/")
 def index():
-    return render_template("app.html")
+    return render_template("temperatura_humedad.py")
 
 @app.route("/alumnos/guardar", methods=["POST"])
 def alumnosGuardar():
