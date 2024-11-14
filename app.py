@@ -1,125 +1,123 @@
-from flask import Flask, request, jsonify
-from flask_mysql_connector import MySQL
+from flask import Flask, render_template, request, jsonify
+import mysql.connector
 import pusher
 
 app = Flask(__name__)
 
-class MySQLConnectionFactory:
-    @staticmethod
-    def create_connection(app):
-        app.config['MYSQL_HOST'] = '185.232.14.52'
-        app.config['MYSQL_DATABASE'] = 'u760464709_tst_sep'
-        app.config['MYSQL_USER'] = 'u760464709_tst_sep_usr'
-        app.config['MYSQL_PASSWORD'] = 'dJ0CIAFF='
-        return MySQL(app)
+def get_db_connection():
+    con = mysql.connector.connect(
+        host="185.232.14.52",
+        database="u760464709_tst_sep",
+        user="u760464709_tst_sep_usr",
+        password="dJ0CIAFF="
+    )
+    return con
 
-mysql = MySQLConnectionFactory.create_connection(app)
+@app.route("/")
+def index():
+    return render_template("WONHOS LIBRARY.py")
 
-pusher_client = pusher.Pusher(
-    app_id='1864232',
-    key='ec020425c2206acb32eb',
-    secret='a5091fe74dbda031cda4',
-    cluster='us2',
-    ssl=True
+@app.route("/alumnos/guardar", methods=["POST"])
+def alumnosGuardar():
+    try:
+        telefono = request.form["tel"]
+        nombre_curso = request.form["ncurso"]
 
+        con = get_db_connection()
+        if not con.is_connected():
+            con.reconnect()
 
-)
+        cursor = con.cursor()
+        sql = "INSERT INTO tst0_cursos (Telefono, Nombre_Curso) VALUES (%s, %s)"
+        val = (telefono, nombre_curso)
+        cursor.execute(sql, val)
+        con.commit()
 
-class CursoCRUD:
-    @staticmethod
-    def obtener_todos():
-        try:
-            conn = mysql.connection
-            cursor = conn.cursor()
-            cursor.execute("SELECT Id_Curso, Nombre_Curso, Telefono FROM tst0_cursos")
-            return cursor.fetchall()
-        except Exception as e:
-            return str(e)
-    
-    @staticmethod
-    def guardar(nombre_curso, telefono):
-        try:
-            conn = mysql.connection
-            cursor = conn.cursor()
-            cursor.execute("INSERT INTO tst0_cursos (Nombre_Curso, Telefono) VALUES (%s, %s)", (nombre_curso, telefono))
-            conn.commit()
-            
-            pusher_client.trigger('conexion', 'evento', {'tel': telefono, 'ncurso': nombre_curso})
-            
-            return "Registro guardado exitosamente."
-        except Exception as e:
-            return str(e)
-    
-    @staticmethod
-    def eliminar(id_curso):
-        try:
-            conn = mysql.connection
-            cursor = conn.cursor()
-            cursor.execute("DELETE FROM tst0_cursos WHERE Id_Curso = %s", (id_curso,))
-            conn.commit()
-            return "Registro eliminado exitosamente."
-        except Exception as e:
-            return str(e)
+        cursor.close()
+        con.close()
 
-    @staticmethod
-    def obtener_por_id(id_curso):
-        try:
-            conn = mysql.connection
-            cursor = conn.cursor()
-            cursor.execute("SELECT Id_Curso, Nombre_Curso, Telefono FROM tst0_cursos WHERE Id_Curso = %s", (id_curso,))
-            return cursor.fetchone()
-        except Exception as e:
-            return str(e)
-    
-    @staticmethod
-    def actualizar(id_curso, nombre_curso, telefono):
-        try:
-            conn = mysql.connection
-            cursor = conn.cursor()
-            cursor.execute("UPDATE tst0_cursos SET Nombre_Curso = %s, Telefono = %s WHERE Id_Curso = %s", (nombre_curso, telefono, id_curso))
-            conn.commit()
-            return "Registro actualizado exitosamente."
-        except Exception as e:
-            return str(e)
+        # Configuración de Pusher
+        pusher_client = pusher.Pusher(
+            app_id='1864232',
+            key='ec020425c2206acb32eb',
+            secret='a5091fe74dbda031cda4',
+            cluster='us2',
+            ssl=True
+        )
+        pusher_client.trigger("conexion", "evento", {"tel": telefono, "ncurso": nombre_curso})
 
-@app.route('/buscar', methods=['GET'])
+        # Devolver JSON
+        return jsonify({"message": f"Teléfono {telefono} y curso {nombre_curso} guardados correctamente"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/buscar")
 def buscar():
-    data = CursoCRUD.obtener_todos()
-    if isinstance(data, str):
-        return jsonify({'error': data})
-    return jsonify({'data': data})
+    try:
+        con = get_db_connection()
+        if not con.is_connected():
+            con.reconnect()
 
-@app.route('/alumnos/guardar', methods=['POST'])
-def guardar():
-    nombre_curso = request.form['ncurso']
-    telefono = request.form['tel']
-    mensaje = CursoCRUD.guardar(nombre_curso, telefono)
-    if "error" in mensaje.lower():
-        return jsonify({'error': mensaje})
-    return jsonify({'message': mensaje})
+        cursor = con.cursor()
+        cursor.execute("SELECT * FROM tst0_cursos")
+        registros = cursor.fetchall()
 
-@app.route('/alumnos/eliminar/<int:id_curso>', methods=['DELETE'])
+        cursor.close()
+        con.close()
+
+        # Devolver registros en JSON
+        return jsonify(data=registros)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/alumnos/eliminar/<int:id_curso>", methods=["DELETE"])
 def eliminar(id_curso):
-    mensaje = CursoCRUD.eliminar(id_curso)
-    if "error" in mensaje.lower():
-        return jsonify({'error': mensaje})
-    return jsonify({'message': mensaje})
+    try:
+        con = get_db_connection()
+        if not con.is_connected():
+            con.reconnect()
 
-@app.route('/alumnos/editar/<int:id_curso>', methods=['GET'])
-def obtener_datos(id_curso):
-    data = CursoCRUD.obtener_por_id(id_curso)
-    if isinstance(data, str):
-        return jsonify({'error': data})
-    return jsonify({'data': data})
+        cursor = con.cursor()
+        sql = "DELETE FROM tst0_cursos WHERE Id_Curso = %s"
+        val = (id_curso,)
+        cursor.execute(sql, val)
+        con.commit()
 
-@app.route('/alumnos/editar/<int:id_curso>', methods=['POST'])
+        cursor.close()
+        con.close()
+
+        # Devolver mensaje en JSON
+        return jsonify({"message": f"Registro con ID {id_curso} eliminado correctamente"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/alumnos/editar/<int:id_curso>", methods=["GET", "POST"])
 def editar(id_curso):
-    nombre_curso = request.form['ncurso']
-    telefono = request.form['tel']
-    mensaje = CursoCRUD.actualizar(id_curso, nombre_curso, telefono)
-    if "error" in mensaje.lower():
-        return jsonify({'error': mensaje})
-    return jsonify({'message': mensaje})
+    con = get_db_connection()
+    try:
+        if request.method == "GET":
+            cursor = con.cursor()
+            cursor.execute("SELECT * FROM tst0_cursos WHERE Id_Curso = %s", (id_curso,))
+            registro = cursor.fetchone()
+            cursor.close()
+            return jsonify(data=registro)
 
-if __name__ == '__main__':
+        if request.method == "POST":
+            telefono = request.form["tel"]
+            nombre_curso = request.form["ncurso"]
+
+            cursor = con.cursor()
+            sql = "UPDATE tst0_cursos SET Telefono = %s, Nombre_Curso = %s WHERE Id_Curso = %s"
+            val = (telefono, nombre_curso, id_curso)
+            cursor.execute(sql, val)
+            con.commit()
+
+            cursor.close()
+            return jsonify({"message": f"Registro con ID {id_curso} actualizado correctamente"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        con.close()
+
+if __name__ == "__main__":
     app.run(debug=True)
