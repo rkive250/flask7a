@@ -15,7 +15,7 @@ def get_db_connection():
 
 @app.route("/")
 def index():
-    return render_template("WONHOS LIBRARY.py")
+    return render_template("WL.html")
 
 @app.route("/alumnos/guardar", methods=["POST"])
 def alumnosGuardar():
