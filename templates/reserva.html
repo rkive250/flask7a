@@ -2,16 +2,68 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reserva</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
+    <title>Formulario de Reserva</title>
+    <style>
+        body {
+            font-family: 'Kalam', cursive;
+            background-color: #ffffff;
+            color: #333;
+            text-align: center;
+            padding: 2cm;
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 24px;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .form-container input, .form-container select {
+            padding: 10px;
+            margin: 10px;
+            width: 250px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .button {
+            background-color: #333;
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #4caf50;
+        }
+    </style>
 </head>
 <body>
-    <h1>Reserva un Libro</h1>
-    <form action="/reserva" method="POST">
-        <label for="nombre">Nombre Completo:</label>
-        <input type="text" id="nombre" name="nombre" required><br><br>
-        <label for="libro">Libro a Reservar:</label>
-        <input type="text" id="libro" name="libro" required><br><br>
-        <button type="submit">Reservar</button>
-    </form>
+    <h1>Formulario de Reserva de Libro</h1>
+
+    <div class="form-container">
+        <form action="reserva.php" method="POST">
+            <input type="text" name="nombre_completo" placeholder="Nombre Completo" required>
+            <input type="date" name="fecha_nacimiento" placeholder="Fecha de Nacimiento" required>
+            <input type="tel" name="telefono" placeholder="Teléfono" required>
+            <input type="email" name="correo" placeholder="Correo Electrónico" required>
+            <input type="text" name="nombre_libro" placeholder="Nombre del Libro" required>
+            <input type="date" name="fecha_apartado" placeholder="Fecha de Apartado" required>
+            <button type="submit" class="button">Reservar</button>
+        </form>
+    </div>
 </body>
 </html>
