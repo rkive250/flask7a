@@ -20,6 +20,7 @@ def reserva():
         nombre_libro = request.form['nombre_libro']
         fecha_apartado = request.form['fecha_apartado']
         
+        # Conexión a la base de datos
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
         
@@ -29,14 +30,14 @@ def reserva():
         """
         
         cursor.execute(sql, (nombre_completo, fecha_nacimiento, telefono, correo, nombre_libro, fecha_apartado))
-        conn.commit()  
+        conn.commit()  # Confirmar los cambios
         
         cursor.close()
         conn.close()
         
         return "Reserva realizada con éxito."
     
-    return render_template('formulario_reserva.html')
+    return render_template('reserva.html')  # Asegúrate de que esta plantilla esté bien configurada
 
 if __name__ == '__main__':
     app.run(debug=True)
