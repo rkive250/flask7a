@@ -45,11 +45,11 @@
 <body>
     <h1>Formulario de Reserva</h1>
 
-    {% if mensaje %}
-        <p>{{ mensaje }}</p>
-    {% endif %}
-
     <div class="form-container">
+        {% if mensaje %}
+            <p>{{ mensaje }}</p>
+        {% endif %}
+        
         <form action="/reserva" method="POST">
             <input type="text" name="nombre_completo" placeholder="Nombre Completo" required>
             <input type="date" name="fecha_nacimiento" placeholder="Fecha de Nacimiento" required>
