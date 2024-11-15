@@ -22,7 +22,7 @@
             align-items: center;
         }
         h1 {
-            font-size: 24px; /* Tamaño de letra más pequeño */
+            font-size: 24px;
             font-style: italic;
             margin-bottom: 20px;
         }
@@ -33,13 +33,11 @@
             box-sizing: border-box;
         }
         .button {
-            background-color: #333; /* Botones del color del borde */
+            background-color: #333;
             border: none;
             color: white;
             padding: 10px 25px;
             text-align: center;
-            text-decoration: none;
-            display: inline-block;
             font-size: 14px;
             margin: 5px;
             cursor: pointer;
@@ -59,9 +57,9 @@
     </style>
 </head>
 <body>
-    <img src="https://i.imgur.com/F47bLWm.png" alt="Descripción de la imagen">
+    <img src="https://png.pngtree.com/png-clipart/20231017/original/pngtree-books-line-art-png-image_13327388.png" alt="Descripción de la imagen">
     
-    <h1>{{ title }}</h1>
+    <h1>{{ title if title else 'Bienvenido a Wonhos Library' }}</h1>
     
     <div class="button-container">
         <a href="/reserva" class="button">Reserva</a>
@@ -72,4 +70,4 @@
         <a href="/proximos-stock" class="button">Próximos a Salir de Stock</a>
     </div>
 </body>
-</html>  
+</html>
