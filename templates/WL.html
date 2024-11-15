@@ -4,23 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
-    <title>Wonhos Library</title>
+    <title>WELCOME TO WL</title>
     <style>
         body {
             font-family: 'Kalam', cursive;
             background-color: #ffffff;
             color: #333;
             text-align: center;
+            height: 100vh;
+            margin: 0;
             padding: 2cm;
-        }
-        .button-container {
+            box-sizing: border-box;
+            border: 1cm solid black;
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             justify-content: center;
-            margin-top: 20px;
+            align-items: center;
+        }
+        h1 {
+            font-size: 24px; /* Tamaño de letra más pequeño */
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        img {
+            width: 420px;
+            height: 400px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
         }
         .button {
-            background-color: #333;
+            background-color: #333; /* Botones del color del borde */
             border: none;
             color: white;
             padding: 10px 25px;
@@ -28,6 +41,7 @@
             text-decoration: none;
             display: inline-block;
             font-size: 14px;
+            margin: 5px;
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s;
@@ -35,13 +49,22 @@
         .button:hover {
             background-color: #4caf50;
         }
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+            padding-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>Bienvenido a Wonhos Library</h1>
-
+    <img src="https://i.imgur.com/F47bLWm.png" alt="Descripción de la imagen">
+    
+    <h1>{{ title }}</h1>
+    
     <div class="button-container">
-        <a href="/reserva" class="button">Reserva</a>
+        <a href="reserva.html" class="button">Reserva</a>
         <a href="/buscar" class="button">Buscar</a>
         <a href="/categorias" class="button">Categorías</a>
         <a href="/ocupados" class="button">Ocupados</a>
@@ -49,4 +72,4 @@
         <a href="/proximos-stock" class="button">Próximos a Salir de Stock</a>
     </div>
 </body>
-</html>
+</html>  
