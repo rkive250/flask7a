@@ -17,7 +17,7 @@ $correo = $_POST['correo'];
 $nombre_libro = $_POST['nombre_libro'];
 $fecha_apartado = $_POST['fecha_apartado'];
 
-$sql = "INSERT INTO reservas (nombre_completo, fecha_nacimiento, telefono, correo, nombre_libro, fecha_apartado)
+$sql = "INSERT INTO wonhoslib (nombre_completo, fecha_nacimiento, telefono, correo, nombre_libro, fecha_apartado)
         VALUES ('$nombre_completo', '$fecha_nacimiento', '$telefono', '$correo', '$nombre_libro', '$fecha_apartado')";
 
 if ($conn->query($sql) === TRUE) {
