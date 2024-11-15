@@ -20,9 +20,3 @@ def reserva():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-    
-    return render_template('reserva.html')  
-
-if __name__ == '__main__':
-    app.run(debug=True)
