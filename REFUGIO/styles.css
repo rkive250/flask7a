@@ -2,7 +2,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: #f2f2f2;
+  background: #f9f9f9;
   color: #333;
   text-align: center;
 }
@@ -10,27 +10,49 @@ body {
 header {
   background: #4CAF50;
   color: white;
-  padding: 15px;
+  padding: 30px 10px;
 }
 
-h1 {
-  margin: 0;
+header h1 {
+  margin: 0.2em 0;
+  font-size: 2em;
 }
 
 main {
   padding: 20px;
 }
 
-#tabla {
-  margin-top: 20px;
+section {
+  margin: 20px auto;
+  max-width: 600px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.item {
-  background: white;
-  padding: 15px;
-  margin: 10px auto;
-  max-width: 400px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  text-align: left;
+h2 {
+  color: #4CAF50;
 }
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 15px 25px;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+footer {
+  margin-top: 20px;
+  padding: 15px;
+  background: #333;
+  color: white;
+}
+
