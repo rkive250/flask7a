@@ -1,0 +1,25 @@
+{
+  "padrinos": [
+    {
+      "id": 1,
+      "nombre": "Juan Pérez",
+      "animal_apadrinado": "Firulais (Perro)",
+      "monto": "50 USD/mes",
+      "fecha_inicio": "2024-01-15"
+    },
+    {
+      "id": 2,
+      "nombre": "María López",
+      "animal_apadrinado": "Mishi (Gato)",
+      "monto": "30 USD/mes",
+      "fecha_inicio": "2024-03-20"
+    },
+    {
+      "id": 3,
+      "nombre": "Carlos Ramírez",
+      "animal_apadrinado": "Luna (Conejo)",
+      "monto": "40 USD/mes",
+      "fecha_inicio": "2024-05-10"
+    }
+  ]
+}
